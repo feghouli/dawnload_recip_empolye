@@ -168,116 +168,116 @@
     <button onclick="checkRegistration()">تحقق من الرقم الوظيفي</button>
   </div>
 
-  <script>
-  
+ <script>
   const scriptURL = "https://script.google.com/macros/s/AKfycbwHJ9sIDeECnikRHKFX464gO9rpFJgNstzl0-w-1mAfLirG2s8g2jtCI6NfAf5fiOibqw/exec";
 
-  // 🔹 يقرأ رقم التعريف من الرابط ويملأه تلقائيًا ويضغط زر التحقق
-const params = new URLSearchParams(window.location.search);
-const empIdFromURL = params.get("empId");
+  // 🔹 يقرأ رقم التعريف من الرابط ويملأه تلقائيًا ويشغّل التحقق بعد تحميل الصفحة
+  const params = new URLSearchParams(window.location.search);
+  const empIdFromURL = params.get("empId");
 
-if (empIdFromURL) {
-  const input = document.getElementById("empId");
-  input.value = empIdFromURL;
+  // تنظيف/تقييد أثناء الكتابة: نسمح بالـ 0 في البداية — لا نمسحها هنا
+  const empInput = document.getElementById("empId");
+  empInput.addEventListener("input", function () {
+    // نحذف كل الرموز غير الأرقام
+    this.value = this.value.replace(/\D/g, "");
+    // حد أقصى (اختياري) لعدد الأرقام التي يمكن إدخالها - عدّل الرقم لو تريد
+    if (this.value.length > 16) this.value = this.value.slice(0, 16);
+  });
 
-  // ننتظر قليلاً حتى تحميل الصفحة بالكامل
-  setTimeout(() => {
-    checkRegistration(); // ينفّذ مباشرة التحقق بالرقم
-  }, 500);
-}
-
-    // 🔹 إزالة الأصفار من البداية عند إدخال الرقم
-document.getElementById("empId").addEventListener("input", function () {
-  // نحذف كل الرموز غير الأرقام
-  this.value = this.value.replace(/\D/g, "");
-  // نحذف الأصفار من البداية فقط
-  this.value = this.value.replace(/^0+/, "");
-});
-
-async function checkRegistration() {
-  const empIdInput = document.getElementById("empId");
-  const empIdRaw = empIdInput.value.trim();
-  const loader = document.getElementById("loader");
-
-  if (!empIdRaw) {
-    Swal.fire({
-      icon: "warning",
-      title: "⚠️ يرجى إدخال رقم التعريف الوظيفي",
-      confirmButtonText: "حسنًا"
-    });
-    return;
+  // إذا وُجد empId في الرابط املأ الحقل وشغّل التحقق بعد تأخير بسيط
+  if (empIdFromURL) {
+    empInput.value = empIdFromURL;
+    setTimeout(() => {
+      checkRegistration();
+    }, 500);
   }
 
-  // ✅ هنا نزيل الأصفار فقط أثناء التحقق
-  const empId = empIdRaw.replace(/^0+/, "");
+  async function checkRegistration() {
+    const empIdRaw = empInput.value.trim();
+    const loader = document.getElementById("loader");
 
-  loader.style.display = "block";
-
-  try {
-    const response = await fetch(`${scriptURL}?id=${empId}`);
-    const data = await response.json();
-    loader.style.display = "none";
-
-    if (!data.found) {
+    if (!empIdRaw) {
       Swal.fire({
-        icon: "error",
-        title: "❌ لم يتم العثور على تسجيل",
-        text: "الرقم الذي أدخلته غير موجود في التسجيلات."
+        icon: "warning",
+        title: "⚠️ يرجى إدخال رقم التعريف الوظيفي",
+        confirmButtonText: "حسنًا"
       });
       return;
     }
 
-    const d = data.data;
-    Swal.fire({
-      title: "✅ التسجيل موجود",
-      html: `
-        <div style="text-align:right;font-family:'Cairo',sans-serif;direction:rtl;">
-          <p><b>اللقب والإسم:</b> ${d.name}</p>
-          <p><b>الرقم الوظيفي:</b> ${d.empId}</p>
-          <p><b>الوظيفة:</b> ${d.grade}</p>
-          <p><b>مكان العمل:</b> ${d.workPlace}</p>
-          <p><b>الدائرة:</b> ${d.daira}</p>
-          <p><b>البلدية:</b> ${d.commune}</p>
-          <p><b>الرحلة:</b> ${d.trip}</p>
-          <p><b>رقم الهاتف:</b> ${d.phone}</p>
-          <p><b>تاريخ التسجيل:</b> ${d.date}</p>
-          <br>
-          <div style="text-align:center;">
-            <a href="${data.fileUrl}" target="_blank" style="
-              display:inline-block;
-              background:#ef4444;
-              color:white;
-              text-decoration:none;
-              padding:12px 26px;
-              border-radius:10px;
-              font-weight:700;
-              font-size:17px;
-              transition:0.3s;
-              font-family:'Cairo',sans-serif;
-            " onmouseover="this.style.background='#dc2626';"
-              onmouseout="this.style.background='#ef4444';">
-              📥 تحميل الوصل PDF
-            </a>
+    // ✅ نزيل الأصفار من البداية فقط أثناء التحقق (هنا يحدث التجاهل فعلاً)
+    const empId = empIdRaw.replace(/^0+/, "");
+
+    loader.style.display = "block";
+
+    try {
+      const response = await fetch(`${scriptURL}?id=${empId}`);
+      // تحقق من استجابة صحيحة
+      if (!response.ok) throw new Error("فشل الاتصال بالخادم (HTTP " + response.status + ")");
+      const data = await response.json();
+      loader.style.display = "none";
+
+      if (!data.found) {
+        Swal.fire({
+          icon: "error",
+          title: "❌ لم يتم العثور على تسجيل",
+          text: "الرقم الذي أدخلته غير موجود في التسجيلات."
+        });
+        return;
+      }
+
+      const d = data.data;
+      Swal.fire({
+        title: "✅ التسجيل موجود",
+        html: `
+          <div style="text-align:right;font-family:'Cairo',sans-serif;direction:rtl;">
+            <p><b>اللقب والإسم:</b> ${d.name}</p>
+            <p><b>الرقم الوظيفي:</b> ${d.empId}</p>
+            <p><b>الوظيفة:</b> ${d.grade}</p>
+            <p><b>مكان العمل:</b> ${d.workPlace}</p>
+            <p><b>الدائرة:</b> ${d.daira}</p>
+            <p><b>البلدية:</b> ${d.commune}</p>
+            <p><b>الرحلة:</b> ${d.trip}</p>
+            <p><b>رقم الهاتف:</b> ${d.phone}</p>
+            <p><b>تاريخ التسجيل:</b> ${d.date}</p>
+            <br>
+            <div style="text-align:center;">
+              <a href="${data.fileUrl}" target="_blank" style="
+                display:inline-block;
+                background:#ef4444;
+                color:white;
+                text-decoration:none;
+                padding:12px 26px;
+                border-radius:10px;
+                font-weight:700;
+                font-size:17px;
+                transition:0.3s;
+                font-family:'Cairo',sans-serif;
+              ">
+                📥 تحميل الوصل PDF
+              </a>
+            </div>
           </div>
-        </div>
-      `,
-      showConfirmButton: false,
-      width: 520
-    });
+        `,
+        showConfirmButton: false,
+        width: 520
+      });
 
-  } catch (err) {
-    loader.style.display = "none";
-    Swal.fire({
-      icon: "error",
-      title: "🚫 خطأ في الاتصال",
-      text: "تعذر الاتصال بالخادم، يرجى المحاولة لاحقًا."
-    });
+    } catch (err) {
+      loader.style.display = "none";
+      console.error("خطأ أثناء التحقق:", err);
+      Swal.fire({
+        icon: "error",
+        title: "🚫 خطأ في الاتصال",
+        text: "تعذر الاتصال بالخادم، يرجى المحاولة لاحقًا."
+      });
+    }
   }
-}
+</script>
 
-  </script>
 </body>
 </html>
+
 
 
 
