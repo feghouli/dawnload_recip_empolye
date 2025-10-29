@@ -195,84 +195,90 @@ document.getElementById("empId").addEventListener("input", function () {
 });
 
     async function checkRegistration() {
-      const empId = document.getElementById("empId").value.trim();
-      const loader = document.getElementById("loader");
+  const empIdInput = document.getElementById("empId");
+  let empIdRaw = empIdInput.value.trim();
+  const loader = document.getElementById("loader");
 
-      if (!empId) {
-        Swal.fire({
-          icon: "warning",
-          title: "يرجى إدخال رقم التعريف الوظيفي للموظف",
-          confirmButtonText: "حسنًا"
-        });
-        return;
-      }
+  if (!empIdRaw) {
+    Swal.fire({
+      icon: "warning",
+      title: "يرجى إدخال رقم التعريف الوظيفي",
+      confirmButtonText: "حسنًا"
+    });
+    return;
+  }
 
-      loader.style.display = "block";
+  // ✅ إزالة الأصفار من البداية قبل الإرسال
+  const empId = empIdRaw.replace(/^0+/, "");
 
-      try {
-        const response = await fetch(`${scriptURL}?id=${empId}`);
-        const data = await response.json();
-        loader.style.display = "none";
+  loader.style.display = "block";
 
-        if (!data.found) {
-          Swal.fire({
-            icon: "error",
-            title: "لم يتم العثور على تسجيل",
-            text: "الرقم الذي أدخلته غير موجود في تسجيلات الرحلات لسنة 2025."
-          });
-          return;
-        }
+  try {
+    const response = await fetch(`${scriptURL}?id=${empId}`);
+    const data = await response.json();
+    loader.style.display = "none";
 
-        const d = data.data;
-        Swal.fire({
-          title: "✅ التسجيل موجود",
-          html: `
-            <div style="text-align:right;font-family:'Cairo',sans-serif;direction:rtl;">
-              <p><b>اللقب والإسم:</b> ${d.name}</p>
-              <p><b>الرقم الوظيفي:</b> ${d.empId}</p>
-              <p><b>الوظيفة:</b> ${d.grade}</p>
-              <p><b>مكان العمل:</b> ${d.workPlace}</p>
-              <p><b>الدائرة:</b> ${d.daira}</p>
-              <p><b>البلدية:</b> ${d.commune}</p>
-              <p><b>الرحلة:</b> ${d.trip}</p>
-              <p><b>رقم الهاتف:</b> ${d.phone}</p>
-              <p><b>تاريخ التسجيل:</b> ${d.date}</p>
-              <br>
-              <div style="text-align:center;">
-                <a href="${data.fileUrl}" target="_blank" style="
-                  display:inline-block;
-                  background:#ef4444;
-                  color:white;
-                  text-decoration:none;
-                  padding:12px 26px;
-                  border-radius:10px;
-                  font-weight:700;
-                  font-size:17px;
-                  transition:0.3s;
-                  font-family:'Cairo',sans-serif;
-                " onmouseover="this.style.background='#dc2626';"
-                  onmouseout="this.style.background='#ef4444';">
-                  📥 تحميل الوصل PDF
-                </a>
-              </div>
-            </div>
-          `,
-          showConfirmButton: false,
-          width: 520
-        });
-
-      } catch (err) {
-        loader.style.display = "none";
-        Swal.fire({
-          icon: "error",
-          title: "حدث خطأ أثناء الاتصال",
-          text: "يرجى المحاولة لاحقًا."
-        });
-      }
+    if (!data.found) {
+      Swal.fire({
+        icon: "error",
+        title: "❌ لم يتم العثور على تسجيل",
+        text: "الرقم الذي أدخلته غير موجود في تسجيلات الرحلات لسنة 2025."
+      });
+      return;
     }
+
+    const d = data.data;
+    Swal.fire({
+      title: "✅ التسجيل موجود",
+      html: `
+        <div style="text-align:right;font-family:'Cairo',sans-serif;direction:rtl;">
+          <p><b>اللقب والإسم:</b> ${d.name}</p>
+          <p><b>الرقم الوظيفي:</b> ${d.empId}</p>
+          <p><b>الوظيفة:</b> ${d.grade}</p>
+          <p><b>مكان العمل:</b> ${d.workPlace}</p>
+          <p><b>الدائرة:</b> ${d.daira}</p>
+          <p><b>البلدية:</b> ${d.commune}</p>
+          <p><b>الرحلة:</b> ${d.trip}</p>
+          <p><b>رقم الهاتف:</b> ${d.phone}</p>
+          <p><b>تاريخ التسجيل:</b> ${d.date}</p>
+          <br>
+          <div style="text-align:center;">
+            <a href="${data.fileUrl}" target="_blank" style="
+              display:inline-block;
+              background:#ef4444;
+              color:white;
+              text-decoration:none;
+              padding:12px 26px;
+              border-radius:10px;
+              font-weight:700;
+              font-size:17px;
+              transition:0.3s;
+              font-family:'Cairo',sans-serif;
+            " onmouseover="this.style.background='#dc2626';"
+              onmouseout="this.style.background='#ef4444';">
+              📥 تحميل الوصل PDF
+            </a>
+          </div>
+        </div>
+      `,
+      showConfirmButton: false,
+      width: 520
+    });
+
+  } catch (err) {
+    loader.style.display = "none";
+    Swal.fire({
+      icon: "error",
+      title: "حدث خطأ أثناء الاتصال",
+      text: "يرجى المحاولة لاحقًا."
+    });
+  }
+}
+
   </script>
 </body>
 </html>
+
 
 
 
