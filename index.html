@@ -169,6 +169,14 @@
   </div>
 
   <script>
+    // 🔹 يقرأ رقم التعريف من الرابط ويملأه في الحقل
+const params = new URLSearchParams(window.location.search);
+const empId = params.get("empId");
+if (empId) {
+  document.getElementById("empIdInput").value = empId;
+  document.getElementById("checkBtn").click(); // 🔹 يضغط زر التحقق تلقائيًا
+}
+
     const scriptURL = "https://script.google.com/macros/s/AKfycbwHJ9sIDeECnikRHKFX464gO9rpFJgNstzl0-w-1mAfLirG2s8g2jtCI6NfAf5fiOibqw/exec";
 
     async function checkRegistration() {
@@ -250,3 +258,4 @@
   </script>
 </body>
 </html>
+
