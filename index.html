@@ -186,6 +186,14 @@ if (empIdFromURL) {
   }, 500);
 }
 
+    // 🔹 إزالة الأصفار من البداية عند إدخال الرقم
+document.getElementById("empId").addEventListener("input", function () {
+  // نحذف كل الرموز غير الأرقام
+  this.value = this.value.replace(/\D/g, "");
+  // نحذف الأصفار من البداية فقط
+  this.value = this.value.replace(/^0+/, "");
+});
+
     async function checkRegistration() {
       const empId = document.getElementById("empId").value.trim();
       const loader = document.getElementById("loader");
@@ -265,5 +273,6 @@ if (empIdFromURL) {
   </script>
 </body>
 </html>
+
 
 
