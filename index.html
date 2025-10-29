@@ -194,21 +194,21 @@ document.getElementById("empId").addEventListener("input", function () {
   this.value = this.value.replace(/^0+/, "");
 });
 
-    async function checkRegistration() {
+async function checkRegistration() {
   const empIdInput = document.getElementById("empId");
-  let empIdRaw = empIdInput.value.trim();
+  const empIdRaw = empIdInput.value.trim();
   const loader = document.getElementById("loader");
 
   if (!empIdRaw) {
     Swal.fire({
       icon: "warning",
-      title: "يرجى إدخال رقم التعريف الوظيفي",
+      title: "⚠️ يرجى إدخال رقم التعريف الوظيفي",
       confirmButtonText: "حسنًا"
     });
     return;
   }
 
-  // ✅ إزالة الأصفار من البداية قبل الإرسال
+  // ✅ هنا نزيل الأصفار فقط أثناء التحقق
   const empId = empIdRaw.replace(/^0+/, "");
 
   loader.style.display = "block";
@@ -222,7 +222,7 @@ document.getElementById("empId").addEventListener("input", function () {
       Swal.fire({
         icon: "error",
         title: "❌ لم يتم العثور على تسجيل",
-        text: "الرقم الذي أدخلته غير موجود في تسجيلات الرحلات لسنة 2025."
+        text: "الرقم الذي أدخلته غير موجود في التسجيلات."
       });
       return;
     }
@@ -269,8 +269,8 @@ document.getElementById("empId").addEventListener("input", function () {
     loader.style.display = "none";
     Swal.fire({
       icon: "error",
-      title: "حدث خطأ أثناء الاتصال",
-      text: "يرجى المحاولة لاحقًا."
+      title: "🚫 خطأ في الاتصال",
+      text: "تعذر الاتصال بالخادم، يرجى المحاولة لاحقًا."
     });
   }
 }
@@ -278,6 +278,7 @@ document.getElementById("empId").addEventListener("input", function () {
   </script>
 </body>
 </html>
+
 
 
 
