@@ -248,5 +248,20 @@
       }
     }
   </script>
+  <script>
+  // 🔹 استخراج رقم التعريف الوظيفي من الرابط
+  const urlParams = new URLSearchParams(window.location.search);
+  const empId = urlParams.get("empId");
+
+  // 🔹 تعبئة حقل الإدخال تلقائيًا إذا وُجد الرقم
+  if (empId) {
+    const empInput = document.getElementById("empId");
+    if (empInput) {
+      empInput.value = empId;
+    }
+  }
+</script>
+
 </body>
 </html>
+
