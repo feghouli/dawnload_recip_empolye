@@ -169,26 +169,11 @@
   </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwHJ9sIDeECnikRHKFX464gO9rpFJgNstzl0-w-1mAfLirG2s8g2jtCI6NfAf5fiOibqw/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwJlfBHDebtgsu5jOj5NNUufUoHV6o7ps91HkMXY6AZGUIA0SkMFJgLW1BkilnjMKRDlA/exec";
 
     async function checkRegistration() {
       const empId = document.getElementById("empId").value.trim();
       const loader = document.getElementById("loader");
-
-window.onload = function () {
-  // استخراج رقم التعريف من الرابط
-  const urlParams = new URLSearchParams(window.location.search);
-  const empId = urlParams.get("empId");
-
-  // إذا وُجد رقم التعريف، ضعه في الحقل المخصص له
-  if (empId) {
-    const empIdInput = document.getElementById("empId");
-    if (empIdInput) empIdInput.value = empId;
-  } else {
-    console.warn("لم يتم تمرير رقم التعريف عبر الرابط");
-  }
-};
-
 
       if (!empId) {
         Swal.fire({
@@ -265,4 +250,3 @@ window.onload = function () {
   </script>
 </body>
 </html>
-
