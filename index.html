@@ -201,23 +201,6 @@
         }
 
         const d = data.data;
-
-// ✅ تنسيق التاريخ إلى الشكل dd-mm-yyyy hh:mm:ss
-let formattedDate = d.date;
-try {
-  const dateObj = new Date(d.date);
-  if (!isNaN(dateObj)) {
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const year = dateObj.getFullYear();
-    const hours = String(dateObj.getHours()).padStart(2, '0');
-    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
-    formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
-  }
-} catch (e) {
-  // إذا حدث خطأ في التحويل، يترك التاريخ كما هو
-}
         Swal.fire({
           title: "✅ التسجيل موجود",
           html: `
@@ -267,3 +250,4 @@ try {
   </script>
 </body>
 </html>
+
