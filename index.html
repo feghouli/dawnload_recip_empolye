@@ -49,9 +49,17 @@
     }
 
     .logo img {
-      width: 200px;
+      width: 160px;
       height: auto;
-      filter: contrast(1.1) brightness(1.05);
+      display: block;
+      margin: 0 auto 15px auto;
+      filter: contrast(1.05) brightness(1.1);
+      animation: pulseLogo 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
     }
 
     .header-text {
@@ -60,19 +68,17 @@
       color: #000;
       line-height: 1.6;
       margin-bottom: 30px;
-      margin-top: 0px;
     }
 
-  h1 {
-  color: #ef4444; /* 🎨 وردي ناعم متناسق مع الخلفية */
-  font-size: 22px;
-  font-weight: 700;
-  margin: 10px 0;
-  border-bottom: 2px solid #ff8a8a;
-  display: inline-block;
-  padding-bottom: 5px;
-}
-
+    h1 {
+      color: #ef4444;
+      font-size: 22px;
+      font-weight: 700;
+      margin: 10px 0;
+      border-bottom: 2px solid #ff8a8a;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
 
     input[type="text"] {
       width: 90%;
@@ -126,25 +132,6 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-.logo img {
-  width: 160px;
-  height: auto;
-  display: block;
-  margin: 0 auto 15px auto;
-  filter: contrast(1.05) brightness(1.1);
-  animation: pulseLogo 2.5s ease-in-out infinite; /* ✅ حركة نبض */
-}
-
-@keyframes pulseLogo {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.08);
-  }
-}
-
   </style>
 </head>
 
@@ -169,106 +156,97 @@
   </div>
 
   <script>
-    <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbwJlfBHDebtgsu5jOj5NNUufUoHV6o7ps91HkMXY6AZGUIA0SkMFJgLW1BkilnjMKRDlA/exec";
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwJlfBHDebtgsu5jOj5NNUufUoHV6o7ps91HkMXY6AZGUIA0SkMFJgLW1BkilnjMKRDlA/exec";
 
-async function checkRegistration() {
-  const empId = document.getElementById("empId").value.trim();
-  const loader = document.getElementById("loader");
+  async function checkRegistration() {
+    const empId = document.getElementById("empId").value.trim();
+    const loader = document.getElementById("loader");
 
-  if (!empId) {
-    Swal.fire({
-      icon: "warning",
-      title: "يرجى إدخال رقم التعريف الوظيفي",
-      confirmButtonText: "حسنًا"
-    });
-    return;
-  }
-
-  loader.style.display = "block";
-
-  try {
-    const response = await fetch(`${scriptURL}?id=${empId}`);
-    const data = await response.json();
-    loader.style.display = "none";
-
-    if (!data.found) {
+    if (!empId) {
       Swal.fire({
-        icon: "error",
-        title: "لم يتم العثور على تسجيل",
-        text: "الرقم الذي أدخلته غير موجود في تسجيلات الرحلات لسنة 2025."
+        icon: "warning",
+        title: "يرجى إدخال رقم التعريف الوظيفي",
+        confirmButtonText: "حسنًا"
       });
       return;
     }
 
-    const d = data.data;
-    Swal.fire({
-      title: "✅ التسجيل موجود",
-      html: `
-        <div style="text-align:right;font-family:'Cairo',sans-serif;direction:rtl;">
-          <p><b>اللقب والإسم:</b> ${d.name}</p>
-          <p><b>الرقم الوظيفي:</b> ${d.empId}</p>
-          <p><b>الوظيفة:</b> ${d.grade}</p>
-          <p><b>مكان العمل:</b> ${d.workPlace}</p>
-          <p><b>الدائرة:</b> ${d.daira}</p>
-          <p><b>البلدية:</b> ${d.commune}</p>
-          <p><b>الرحلة:</b> ${d.trip}</p>
-          <p><b>رقم الهاتف:</b> ${d.phone}</p>
-          <p><b>تاريخ التسجيل:</b> ${d.date}</p>
-          <br>
-          <div style="text-align:center;">
-            <a href="${data.fileUrl}" target="_blank" style="
-              display:inline-block;
-              background:#ef4444;
-              color:white;
-              text-decoration:none;
-              padding:12px 26px;
-              border-radius:10px;
-              font-weight:700;
-              font-size:17px;
-              transition:0.3s;
-              font-family:'Cairo',sans-serif;
-            " onmouseover="this.style.background='#dc2626';"
-              onmouseout="this.style.background='#ef4444';">
-              📥 تحميل الوصل PDF
-            </a>
+    loader.style.display = "block";
+
+    try {
+      const response = await fetch(`${scriptURL}?id=${empId}`);
+      const data = await response.json();
+      loader.style.display = "none";
+
+      if (!data.found) {
+        Swal.fire({
+          icon: "error",
+          title: "لم يتم العثور على تسجيل",
+          text: "الرقم الذي أدخلته غير موجود في تسجيلات الرحلات لسنة 2025."
+        });
+        return;
+      }
+
+      const d = data.data;
+      Swal.fire({
+        title: "✅ التسجيل موجود",
+        html: `
+          <div style="text-align:right;font-family:'Cairo',sans-serif;direction:rtl;">
+            <p><b>اللقب والإسم:</b> ${d.name}</p>
+            <p><b>الرقم الوظيفي:</b> ${d.empId}</p>
+            <p><b>الوظيفة:</b> ${d.grade}</p>
+            <p><b>مكان العمل:</b> ${d.workPlace}</p>
+            <p><b>الدائرة:</b> ${d.daira}</p>
+            <p><b>البلدية:</b> ${d.commune}</p>
+            <p><b>الرحلة:</b> ${d.trip}</p>
+            <p><b>رقم الهاتف:</b> ${d.phone}</p>
+            <p><b>تاريخ التسجيل:</b> ${d.date}</p>
+            <br>
+            <div style="text-align:center;">
+              <a href="${data.fileUrl}" target="_blank" style="
+                display:inline-block;
+                background:#ef4444;
+                color:white;
+                text-decoration:none;
+                padding:12px 26px;
+                border-radius:10px;
+                font-weight:700;
+                font-size:17px;
+                transition:0.3s;
+                font-family:'Cairo',sans-serif;
+              " onmouseover="this.style.background='#dc2626';"
+                onmouseout="this.style.background='#ef4444';">
+                📥 تحميل الوصل PDF
+              </a>
+            </div>
           </div>
-        </div>
-      `,
-      showConfirmButton: false,
-      width: 520
-    });
+        `,
+        showConfirmButton: false,
+        width: 520
+      });
 
-  } catch (err) {
-    loader.style.display = "none";
-    Swal.fire("خطأ", "فشل الاتصال بالخادم", "error");
+    } catch (err) {
+      loader.style.display = "none";
+      Swal.fire("خطأ", "فشل الاتصال بالخادم", "error");
+    }
   }
-}
 
-</script>
-<script>
+  // ✅ تعبئة الحقل والضغط التلقائي بعد تحميل الصفحة
   window.onload = function () {
-    // 🔹 استخراج رقم التعريف الوظيفي من الرابط
     const urlParams = new URLSearchParams(window.location.search);
     const empId = urlParams.get("empId");
 
-    // 🔹 تعبئة الحقل والضغط التلقائي على الزر بعد تحميل الصفحة
     if (empId) {
       const empInput = document.getElementById("empId");
       empInput.value = empId;
 
-      // تأخير بسيط لضمان جاهزية الصفحة ثم الضغط التلقائي
       setTimeout(() => {
         const btn = document.querySelector("button[onclick='checkRegistration()']");
         if (btn) btn.click();
       }, 500);
     }
   };
-</script>
+  </script>
 
 </body>
 </html>
-
-
-
-
