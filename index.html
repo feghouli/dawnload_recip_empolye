@@ -175,6 +175,21 @@
       const empId = document.getElementById("empId").value.trim();
       const loader = document.getElementById("loader");
 
+window.onload = function () {
+  // استخراج رقم التعريف من الرابط
+  const urlParams = new URLSearchParams(window.location.search);
+  const empId = urlParams.get("empId");
+
+  // إذا وُجد رقم التعريف، ضعه في الحقل المخصص له
+  if (empId) {
+    const empIdInput = document.getElementById("empId");
+    if (empIdInput) empIdInput.value = empId;
+  } else {
+    console.warn("لم يتم تمرير رقم التعريف عبر الرابط");
+  }
+};
+
+
       if (!empId) {
         Swal.fire({
           icon: "warning",
@@ -250,3 +265,4 @@
   </script>
 </body>
 </html>
+
