@@ -245,20 +245,29 @@ async function checkRegistration() {
   }
 }
 
-// 🔹 تعبئة الرقم تلقائيًا والضغط على الزر بعد فتح الصفحة
-window.onload = function() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const empId = urlParams.get("empId");
+  window.onload = function () {
+    // 🔹 استخراج رقم التعريف الوظيفي من الرابط
+    const urlParams = new URLSearchParams(window.location.search);
+    const empId = urlParams.get("empId");
 
-  if (empId) {
-    const input = document.getElementById("empId");
-    input.value = empId;
-    setTimeout(() => checkRegistration(), 800); // ⏳ انتظر 0.8 ثانية ثم تحقق تلقائيًا
-  }
-};
+    // 🔹 تعبئة الحقل والضغط التلقائي على الزر بعد تحميل الصفحة
+    if (empId) {
+      const empInput = document.getElementById("empId");
+      empInput.value = empId;
+
+      // تأخير بسيط لضمان جاهزية الصفحة ثم الضغط التلقائي
+      setTimeout(() => {
+        const btn = document.querySelector("button[onclick='checkRegistration()']");
+        if (btn) btn.click();
+      }, 500);
+    }
+  };
+
+
 </script>
 
 </body>
 </html>
+
 
 
